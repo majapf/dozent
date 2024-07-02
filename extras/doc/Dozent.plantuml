@@ -1,0 +1,49 @@
+@startuml Dozent
+
+skinparam classAttributeIconSize 0
+' skinparam monochrome true
+
+package java {
+package com.acme.Dozent.entity #DDDDDD {
+    class Kurs {
+        id: String
+        kursName: String
+        email: String
+
+    }
+
+    class Adresse {
+        plz: String
+        ort: String
+    }
+
+    enum GeschlechtType {
+        MAENNLICH
+        WEIBLICH
+        DIVERS
+    }
+
+    class Dozent << entity >> {
+        id : UUID
+        name : String
+        email : String
+        geburtsdatum: LocalDate
+        homepage: URL
+        geschlecht: GeschlechtType
+    }
+
+    Dozent *--> "1..n" Adresse : adresse
+    Dozent <--> "1..n" Kurs : kursName
+    Dozent .up.> GeschlechtType
+
+    Dozent ..> UUID
+    Dozent ..> LocalDate
+    Dozent ..> List
+    Dozent ..> URL
+
+}
+
+hide empty members
+
+
+@enduml

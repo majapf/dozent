@@ -1,0 +1,94 @@
+@startuml DozentWriteController
+
+skinparam classAttributeIconSize 0
+
+package org.springframework {
+package stereotype {
+        interface "@Controller" as Controller
+    }
+
+    package web.bind.annotation {
+        interface "@RequestMapping" as RequestMapping
+        interface "@PathVariable" as PathVariable
+        interface "@RequestBody" as RequestBody
+        interface "@ExceptionHandler" as ExceptionHandler
+    }
+
+    package http {
+        class ResponseEntity<T>
+        class ProblemDetail
+
+        package converter {
+            class HttpMessageNotReadableException
+        }
+
+        ResponseEntity .[hidden].> ProblemDetail
+        ProblemDetail .[hidden].> HttpMessageNotReadableException
+    }
+}
+
+package jakarta.servlet.http {
+    interface HttpServletRequest
+}
+
+package java.util {
+    interface Collection<T>
+    class UUID
+
+    UUID .up[hidden].> Collection
+    Collection .up[hidden].> HttpServletRequest
+}
+
+package com.acme.dozent {
+    package service {
+        class DozentWriteService << control >> << @Service >>
+
+        class ConstraintViolationsException
+        class EmailExistsException
+    }
+
+    package rest #DDDDDD {
+        package patch {
+            class PatchOperation <<entity>>
+        }
+
+        class DozentDTO <<entity>>
+
+        class DozentWriteController << boundary >> << @Controller >> << @RequestMapping >> {
+            + @PostMapping post(@RequestBody DozentDTO: DozentDTO, request: HttpServletRequest): ResponseEntity<Void>
+            + @PutMapping put(@PathVariable id: UUID, @RequestBody DozentDTO: DozentDTO)
+            + @PatchMapping patch(@PathVariable id: UUID, @RequestBody patchOps: Collection<PatchOperation>)
+            + @DeleteMapping deleteById(@PathVariable id: UUID)
+            + @ExceptionHandler onConstraintViolations(ex: ConstraintViolationsException, req: HttpServletRequest): ResponseEntity<ProblemDetail>
+            + @ExceptionHandler onEmailExists(ex: EmailExistsException, req: HttpServletRequest): ResponseEntity<ProblemDetail>
+            + @ExceptionHandler onMessageNotReadable(ex: HttpMessageNotReadableException, req: HttpServletRequest): ResponseEntity<ProblemDetail>
+        }
+
+        DozentWriteController o-down-> "1" DozentWriteService : service
+        DozentWriteController ..> DozentDTO
+        DozentWriteController ..> ConstraintViolationsException
+        DozentWriteController ..> EmailExistsException
+        DozentWriteController ..> PatchOperation
+
+        DozentWriteController .up.> ResponseEntity
+        DozentWriteController .up.> ProblemDetail
+        DozentWriteController .up.> HttpMessageNotReadableException
+        DozentWriteController .right.> HttpServletRequest
+
+        DozentWriteController .up.> Controller
+        DozentWriteController .up.> RequestMapping
+        DozentWriteController .up.> PathVariable
+        DozentWriteController .up.> RequestBody
+        DozentWriteController .up.> ExceptionHandler
+
+        DozentWriteController .right.> UUID
+        DozentWriteController .right.> Collection
+
+        PatchOperation .[hidden].> DozentWriteService
+    }
+}
+
+hide empty members
+
+
+@enduml

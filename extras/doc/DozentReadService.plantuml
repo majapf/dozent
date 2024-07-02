@@ -1,0 +1,45 @@
+@startuml DozentReadService
+
+skinparam classAttributeIconSize 0
+
+package org.springframework.stereotype {
+    interface Service
+}
+
+package java.util {
+    interface List<T>
+    interface Map<K,V>
+    class UUID
+
+    UUID .left[hidden].> Service
+}
+
+package com.acme.dozent {
+    package entity {
+        class Dozent << entity >>
+
+        Dozent .up[hidden].> List
+    }
+
+    package repository {
+        class DozentRepository << control >> << @Repository >>
+    }
+
+    package service #DDDDDD {
+        class DozentReadService << control >> << @Service >> {
+            + findById(id: UUID): Dozent
+            + find(queryParams: Map<String, String>): List<Dozent>
+        }
+
+        DozentReadService o--> DozentRepository : repo
+        DozentReadService .right.> Dozent
+        DozentReadService ..> Service
+        DozentReadService .up.> UUID
+        DozentReadService .up> List
+        DozentReadService .up.> Map
+    }
+}
+
+hide empty members
+
+@enduml

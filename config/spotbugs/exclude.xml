@@ -1,0 +1,12 @@
+<!-- https://spotbugs.readthedocs.io/en/stable/filter.html#introduction-to-filter-files -->
+<FindBugsFilter>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD"/>
+    </Match>
+</FindBugsFilter>

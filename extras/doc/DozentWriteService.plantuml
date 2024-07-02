@@ -1,0 +1,39 @@
+@startuml DozentWriteService
+
+skinparam classAttributeIconSize 0
+
+package org.springframework.stereotype {
+    interface Service
+}
+
+package java.util {
+    class UUID
+}
+
+package com.acme.dozent {
+    package entity {
+        class Dozent << entity >>
+    }
+
+    package repository {
+        class DozentRepository << control >> << @Repository >>
+    }
+
+    package service #DDDDDD {
+        class DozentWriteService << control >> << @Service >> {
+            + create(dozent: Dozent): Dozent
+            + update(dozent: Dozent, id: UUID)
+            + deleteById(id: UUID)
+        }
+
+        DozentWriteService o--> "1" DozentRepository : repo
+        DozentWriteService .right.> Dozent
+        DozentWriteService .up.> Service
+        DozentWriteService .up.> UUID
+    }
+}
+
+hide empty members
+
+
+@enduml

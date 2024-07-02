@@ -1,0 +1,26 @@
+@startuml Komponenten
+
+left to right direction
+
+package com.acme.dozent #DDDDDD {
+    package rest <<boundary>> #FFFFFF {
+        [@RestController\nDozentReadController] as DozentReadController
+    }
+
+    package service <<control>> #FFFFFF {
+        [@Service\nDozentReadService] as DozentReadService
+    }
+
+    package entity <<entity>> #FFFFFF {
+        [Dozent]
+    }
+}
+
+RESTClient ~~> [DozentReadController]
+
+[DozentReadController] o--> [DozentReadService]
+[DozentReadController] .up.> [Dozent]
+[DozentReadService] ..> [Dozent]
+
+
+@enduml

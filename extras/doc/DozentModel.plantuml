@@ -1,0 +1,59 @@
+@startuml Dozent
+
+skinparam classAttributeIconSize 0
+' skinparam monochrome true
+
+package java {
+    package util {
+        interface List<T>
+        class URL
+    }
+
+    package time {
+        class LocalDate
+
+        LocalDate .right[hidden].> List
+    }
+}
+
+package org.springframework.hateoas {
+    class RepresentationModel<T>
+
+    URL .right[hidden].> RepresentationModel
+}
+
+package com.acme.dozent {
+    package entity {
+        class Dozent
+        class Kurs
+        class Adresse
+        enum GeschlechtType
+    }
+
+    package rest #DDDDDD {
+        class DozentModel << entity >> {
+            name : String
+            email : String
+            geburtsdatum: LocalDate
+            homepage: URL
+            geschlecht: GeschlechtType
+
+            DozentModel(dozent: Dozent)
+        }
+
+        DozentModel <--> "1..n" Kurs : Kurs
+        DozentModel *--> "1" Adresse : adresse
+        DozentModel ..> GeschlechtType
+        DozentModel -up-|> RepresentationModel
+
+        DozentModel ..> Dozent
+
+        DozentModel .up.> URL
+        DozentModel .up.> LocalDate
+        DozentModel .up.> List
+    }
+}
+
+hide empty members
+
+@enduml
