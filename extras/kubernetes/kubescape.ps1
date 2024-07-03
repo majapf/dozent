@@ -15,35 +15,22 @@
 
 # https://docs.microsoft.com/en-us/powershell/scripting/developer/cmdlet/approved-verbs-for-windows-powershell-commands?view=powershell-7
 
-# Aufruf:   .\dive.ps1 [eclipse|azul|buildpacks-eclipse|buildpacks-azul]
-# ggf. vorher:  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-# oder:         Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser
-
-# "Param" muss in der 1. Zeile sein
-Param (
-  [string]$base = 'buildpacks'
-)
+# Aufruf:   .\kubescape.ps1
 
 Set-StrictMode -Version Latest
 
 $versionMinimum = [Version]'7.5.0'
 $versionCurrent = $PSVersionTable.PSVersion
 if ($versionMinimum -gt $versionCurrent) {
-  throw "PowerShell $versionMinimum statt $versionCurrent erforderlich"
+    throw "PowerShell $versionMinimum statt $versionCurrent erforderlich"
 }
 
 # Titel setzen
-$host.ui.RawUI.WindowTitle = 'dive'
+$host.ui.RawUI.WindowTitle = 'kubescape'
 
-$diveVersion = 'v0.12.0'
-$imagePrefix = 'majapfannendoerfer/'
-$imageBase = 'dozent'
-$imageTag = "2024.04.1-$base"
-$image = "$imagePrefix${imageBase}:$imageTag"
-
-# https://github.com/wagoodman/dive#installation
-docker run --rm --interactive --tty `
-  --mount type='bind,source=/var/run/docker.sock,destination=/var/run/docker.sock' `
-  --hostname dive --name dive `
-  --read-only --cap-drop ALL `
-  wagoodman/dive:$diveVersion $image
+$release = 'dozent'
+Set-Location .\$release
+helm template $release . -f values.yaml -f dev.yaml > ${env:TEMP}\$release.yaml
+C:\Zimmermann\kubescape\kubescape.exe scan --verbose ${env:TEMP}\$release.yaml
+Set-Location ..
+# Remove-Item -Force ${env:TEMP}\$release.yaml

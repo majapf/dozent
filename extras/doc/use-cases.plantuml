@@ -1,0 +1,19 @@
+@startuml Use Cases
+
+left to right direction
+
+actor Gast
+actor Dozent
+actor Admin
+
+rectangle Dozent {
+    Gast --> (registrieren)
+    Dozent --> (Dozent suchen)
+    Dozent --> (Dozent ändern)
+    Admin --> (Dozent suchen)
+    Admin --> (Dozent ändern)
+    Admin --> (Dozent löschen)
+}
+
+
+@enduml

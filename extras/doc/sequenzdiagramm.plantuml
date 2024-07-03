@@ -1,0 +1,14 @@
+@startuml Sequenzdiagramm
+
+actor Client
+
+boundary DozentGetController
+control DozentReadService
+control DozentRepository
+
+Client -> DozentGetController : GET / getById()
+DozentGetController -> DozentReadService: findById()
+DozentReadService -> DozentRepository: findById()
+
+
+@enduml
